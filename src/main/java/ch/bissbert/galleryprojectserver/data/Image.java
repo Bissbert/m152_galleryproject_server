@@ -3,6 +3,7 @@ package ch.bissbert.galleryprojectserver.data;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Getter
@@ -13,28 +14,42 @@ import javax.persistence.*;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "FullImage")
+    @Column(name = "full_image")
     private byte[] fullImage;
 
-    @Column(name = "PreviewImage")
+    @Column(name = "preview_image")
     private byte[] previewImage;
 
-    @Column(name = "Height")
+    @Column(name = "height")
     private int height;
 
-    @Column(name = "Width")
+    @Column(name = "width")
     private int width;
 
-    @Column(name = "BitsPerPixel")
+    @Column(name = "bits_per_pixel")
     private int bitsPerPixel;
 
-    @Column(name = "Compression")
+    @Column(name = "compression")
     private String compressionType;
 
     @ManyToOne
-    @JoinColumn(name = "MimeTypeID")
+    @JoinColumn(name = "mime_typeid")
     private ImageMimeType mimeType;
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "\nid=" + id +
+                ",\nfullImage=" + Arrays.toString(fullImage) +
+                ",\npreviewImage=" + Arrays.toString(previewImage) +
+                ",\nheight=" + height +
+                ",\nwidth=" + width +
+                ",\nbitsPerPixel=" + bitsPerPixel +
+                ",\ncompressionType='" + compressionType + '\'' +
+                ",\nmimeType=" + mimeType +
+                "\n}";
+    }
 }

@@ -2,11 +2,10 @@ package ch.bissbert.galleryprojectserver;
 
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.data.ImageMimeType;
+import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.common.ImageMetadata;
-import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,21 +15,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Util {
-    public static Image createImage(byte[] imageArray) throws IOException, ImageReadException {
+public class ImageUtil {
+    public static Image createImage(byte[] imageArray, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         ImageInfo imageInfo = Imaging.getImageInfo(imageArray);
 
-        return Image.builder()
+        Image image = Image.builder()
                 .fullImage(imageArray)
                 .previewImage(toPreview(imageArray, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getFormat().getExtension()))
                 .bitsPerPixel(imageInfo.getBitsPerPixel())
                 .compressionType(imageInfo.getCompressionAlgorithm().name())
-                .mimeType(getMimeType(imageInfo.getMimeType()))
+                .mimeType(getMimeType(imageInfo.getMimeType(), mimeTypeRepository))
+                .height(imageInfo.getHeight())
+                .width(imageInfo.getWidth())
                 .build();
+
+        System.out.println(image);
+
+        return image;
     }
 
-    private static ImageMimeType getMimeType(String mimeType) {
-        return null;
+    private static ImageMimeType getMimeType(String mimeType, ImageMimeTypeRepository imageMimeTypeRepository) {
+        ImageMimeType imageMimeType = imageMimeTypeRepository.findImageMimeTypeByName(mimeType);
+        if (imageMimeType == null) {
+            imageMimeType = ImageMimeType.builder().name(mimeType).build();
+            imageMimeTypeRepository.save(imageMimeType);
+        }
+        return imageMimeType;
     }
 
     /**
@@ -64,10 +74,10 @@ public class Util {
         return baos.toByteArray();
     }
 
-    public static List<Image> createImages(List<byte[]> images) throws IOException, ImageReadException {
+    public static List<Image> createImages(List<byte[]> images, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         List<Image> imagesList = new ArrayList<>();
         for (byte[] imageAsByte : images) {
-            imagesList.add(createImage(imageAsByte));
+            imagesList.add(createImage(imageAsByte, mimeTypeRepository));
         }
         return imagesList;
     }
