@@ -1,8 +1,6 @@
 package ch.bissbert.galleryprojectserver.data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,12 +8,15 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name="image_mime_type")
+@AllArgsConstructor
+@Builder
 public class ImageMimeType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private int id;
 
-    @Column(name = "Name")
+    @Column(name = "name")
     private String name;
 }

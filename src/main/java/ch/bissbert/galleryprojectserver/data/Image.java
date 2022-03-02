@@ -10,16 +10,17 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name="image")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
 
-    @Column(name = "FullImage")
+    @Column(name = "full_image")
     private byte[] fullImage;
 
-    @Column(name = "PreviewImage")
+    @Column(name = "Preview_image")
     private byte[] previewImage;
 
     @Column(name = "Height")
@@ -28,13 +29,13 @@ public class Image {
     @Column(name = "Width")
     private int width;
 
-    @Column(name = "BitsPerPixel")
+    @Column(name = "Bits_Per_Pixel")
     private int bitsPerPixel;
 
     @Column(name = "Compression")
     private String compressionType;
 
     @ManyToOne
-    @JoinColumn(name = "MimeTypeID")
+    @JoinColumn(name = "Mime_TypeID")
     private ImageMimeType mimeType;
 }
