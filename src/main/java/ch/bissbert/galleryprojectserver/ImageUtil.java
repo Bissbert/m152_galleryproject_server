@@ -19,7 +19,7 @@ public class ImageUtil {
     public static Image createImage(byte[] imageArray, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         ImageInfo imageInfo = Imaging.getImageInfo(imageArray);
 
-        Image image = Image.builder()
+        return Image.builder()
                 .fullImage(imageArray)
                 .previewImage(toPreview(imageArray, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getFormat().getExtension()))
                 .bitsPerPixel(imageInfo.getBitsPerPixel())
@@ -28,10 +28,6 @@ public class ImageUtil {
                 .height(imageInfo.getHeight())
                 .width(imageInfo.getWidth())
                 .build();
-
-        System.out.println(image);
-
-        return image;
     }
 
     private static ImageMimeType getMimeType(String mimeType, ImageMimeTypeRepository imageMimeTypeRepository) {
