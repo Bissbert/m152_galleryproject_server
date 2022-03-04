@@ -8,6 +8,7 @@ import org.apache.commons.imaging.ImageReadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +41,7 @@ public class ImageController {
     @PostMapping("/images")
     @CrossOrigin(origins = "http://localhost:3000")
     public void saveImages(@RequestParam(name = "image") MultipartFile image) throws IOException, ImageReadException {
-        imageRepository.save(ImageUtil.createImage(image.getBytes(), mimeTypeRepository));
+        imageRepository.save(ImageUtil.createImage(image.getBytes(), image.getOriginalFilename(), mimeTypeRepository));
     }
 
     /**
@@ -54,9 +55,10 @@ public class ImageController {
      */
     @GetMapping("/images")
     @CrossOrigin(origins = "http://localhost:3000")
-    public List<Image> getImages(@RequestParam int page) {
-        Pageable pageable = PageRequest.of(page, 6);
-        return imageRepository.findAll(pageable).getContent();
+    public List<Image> getImages(@RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
+        List<Image> images = imageRepository.findAllWithoutImages(pageable).getContent();
+        return images;
     }
 
     /**
@@ -72,5 +74,20 @@ public class ImageController {
     @CrossOrigin(origins = "http://localhost:3000")
     public byte[] getImage(@PathVariable(name = "id", required = true) int id) {
         return imageRepository.findById(id).get().getFullImage();
+    }
+
+    /**
+     * A spring boot rest service that serves a single preview image as a byte array.
+     * It takes the id of the image as a parameter.
+     * The image is returned as a byte array.
+     *
+     * @param id The id of the image
+     *           The id is the primary key of the image
+     * @return The preview image as a byte array
+     */
+    @GetMapping("/images/preview/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public byte[] getpreviewImage(@PathVariable(name = "id", required = true) int id) {
+        return imageRepository.findPreview(id).getPreviewImage();
     }
 }

@@ -6,6 +6,8 @@ import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
+import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,12 +16,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BinaryOperator;
 
 public class ImageUtil {
-    public static Image createImage(byte[] imageArray, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
+    public static Image createImage(byte[] imageArray, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         ImageInfo imageInfo = Imaging.getImageInfo(imageArray);
 
         return Image.builder()
+                .name(name)
+                .description(imageInfo.getComments().stream().reduce((s, s2) -> s + "\n" + s2).orElse(null))
                 .fullImage(imageArray)
                 .previewImage(toPreview(imageArray, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getFormat().getExtension()))
                 .bitsPerPixel(imageInfo.getBitsPerPixel())
@@ -70,10 +75,10 @@ public class ImageUtil {
         return baos.toByteArray();
     }
 
-    public static List<Image> createImages(List<byte[]> images, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
+    public static List<Image> createImages(List<byte[]> images, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         List<Image> imagesList = new ArrayList<>();
         for (byte[] imageAsByte : images) {
-            imagesList.add(createImage(imageAsByte, mimeTypeRepository));
+            imagesList.add(createImage(imageAsByte, name, mimeTypeRepository));
         }
         return imagesList;
     }
