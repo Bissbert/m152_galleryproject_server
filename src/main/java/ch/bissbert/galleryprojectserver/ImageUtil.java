@@ -6,19 +6,19 @@ import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
-import org.apache.commons.imaging.formats.tiff.constants.TiffTagConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BinaryOperator;
+
+import static java.awt.Image.SCALE_SMOOTH;
 
 public class ImageUtil {
+
+    private ImageUtil(){}
+
     public static Image createImage(
             byte[] imageArray,
             String name,
@@ -74,17 +74,9 @@ public class ImageUtil {
         }
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-        resizedImage.createGraphics().drawImage(image.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH), 0, 0, null);
+        resizedImage.createGraphics().drawImage(image.getScaledInstance(newWidth, newHeight, SCALE_SMOOTH), 0, 0, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(resizedImage, extension, baos);
         return baos.toByteArray();
     }
-
-    /*public static List<Image> createImages(List<byte[]> images, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
-        List<Image> imagesList = new ArrayList<>();
-        for (byte[] imageAsByte : images) {
-            imagesList.add(createImage(imageAsByte, name, mimeTypeRepository));
-        }
-        return imagesList;
-    }*/
 }

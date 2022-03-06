@@ -5,7 +5,8 @@ import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
 import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.Imaging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,13 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BinaryOperator;
 
 /**
  * Controller for the image resource.
@@ -36,6 +34,9 @@ public class ImageController {
     private ImageRepository imageRepository;
     @Autowired
     private ImageMimeTypeRepository mimeTypeRepository;
+
+    private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+
 
     /**
      * A spring boot rest service using the post method
@@ -88,7 +89,7 @@ public class ImageController {
         } else {
             images = imageRepository.findAllByIdIn(pageable, idList).getContent();
         }
-        System.out.println(images);
+        logger.info(images.toString());
         return images;
     }
 
@@ -146,6 +147,7 @@ public class ImageController {
                 case "ascending":
                     sortFromString = sortFromString.ascending();
                     break;
+                default:
             }
         }
         return sortFromString;

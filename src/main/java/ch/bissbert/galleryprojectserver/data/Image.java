@@ -3,7 +3,6 @@ package ch.bissbert.galleryprojectserver.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.activation.MimeType;
 import javax.persistence.*;
 import java.util.Arrays;
 
