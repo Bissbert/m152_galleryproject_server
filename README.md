@@ -11,7 +11,7 @@ It is used to save and fetch images and the belonging data from and to a databas
 
 ## Example Usage Of Endpoints
 
-```http
+```
 ### basic loading of images data
 GET http://localhost:8080/images?page=0&size=9
 
