@@ -19,12 +19,17 @@ import java.util.List;
 import java.util.function.BinaryOperator;
 
 public class ImageUtil {
-    public static Image createImage(byte[] imageArray, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
+    public static Image createImage(
+            byte[] imageArray,
+            String name,
+            String description,
+            ImageMimeTypeRepository mimeTypeRepository
+    ) throws IOException, ImageReadException {
         ImageInfo imageInfo = Imaging.getImageInfo(imageArray);
 
         return Image.builder()
                 .name(name)
-                .description(imageInfo.getComments().stream().reduce((s, s2) -> s + "\n" + s2).orElse(null))
+                .description(description)
                 .fullImage(imageArray)
                 .previewImage(toPreview(imageArray, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getFormat().getExtension()))
                 .bitsPerPixel(imageInfo.getBitsPerPixel())
@@ -75,11 +80,11 @@ public class ImageUtil {
         return baos.toByteArray();
     }
 
-    public static List<Image> createImages(List<byte[]> images, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
+    /*public static List<Image> createImages(List<byte[]> images, String name, ImageMimeTypeRepository mimeTypeRepository) throws IOException, ImageReadException {
         List<Image> imagesList = new ArrayList<>();
         for (byte[] imageAsByte : images) {
             imagesList.add(createImage(imageAsByte, name, mimeTypeRepository));
         }
         return imagesList;
-    }
+    }*/
 }

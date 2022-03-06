@@ -5,15 +5,21 @@ import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
 import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.Imaging;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.BinaryOperator;
 
 /**
  * Controller for the image resource.
@@ -40,8 +46,15 @@ public class ImageController {
      */
     @PostMapping("/images")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void saveImages(@RequestParam(name = "image") MultipartFile image) throws IOException, ImageReadException {
-        imageRepository.save(ImageUtil.createImage(image.getBytes(), image.getOriginalFilename(), mimeTypeRepository));
+    public void saveImages(@ModelAttribute ImageUpload image) throws IOException, ImageReadException {
+        imageRepository.save(
+                ImageUtil.createImage(
+                        image.getImage().getBytes(),
+                        image.getImage().getOriginalFilename(),
+                        image.getDescription(),
+                        mimeTypeRepository
+                )
+        );
     }
 
     /**
@@ -52,12 +65,30 @@ public class ImageController {
      * @param page The page number
      *             The first page is 0
      *             The last page is the number of pages - 1
+     * @param size The number of images per page
+     * @return list of image data
      */
     @GetMapping("/images")
     @CrossOrigin(origins = "http://localhost:3000")
-    public List<Image> getImages(@RequestParam int page, @RequestParam int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
-        List<Image> images = imageRepository.findAllWithoutImages(pageable).getContent();
+    public List<Image> getImagesWithId(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(required = false, name = "sort") List<String> sortBy,
+            @RequestParam(required = false) List<Integer> idList
+    ) {
+        Sort sort = sortBy != null ? sortBy
+                .stream()
+                .map(ImageController::sortFromString)
+                .reduce(Sort::and)
+                .get() : Sort.by("id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        List<Image> images;
+        if (idList == null) {
+            images = imageRepository.findAllWithoutImages(pageable).getContent();
+        } else {
+            images = imageRepository.findAllByIdIn(pageable, idList).getContent();
+        }
+        System.out.println(images);
         return images;
     }
 
@@ -72,8 +103,12 @@ public class ImageController {
      */
     @GetMapping("/images/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public byte[] getImage(@PathVariable(name = "id", required = true) int id) {
-        return imageRepository.findById(id).get().getFullImage();
+    public ResponseEntity<byte[]> getImage(@PathVariable(name = "id", required = true) int id) {
+        Image image = imageRepository.findById(id).get();
+        return ResponseEntity
+                .accepted()
+                .contentType(MediaType.parseMediaType(image.getMimeType().getName()))
+                .body(image.getFullImage());
     }
 
     /**
@@ -87,7 +122,32 @@ public class ImageController {
      */
     @GetMapping("/images/preview/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public byte[] getpreviewImage(@PathVariable(name = "id", required = true) int id) {
-        return imageRepository.findPreview(id).getPreviewImage();
+    public ResponseEntity<byte[]> getpreviewImage(@PathVariable(name = "id", required = true) int id) {
+        Image image = imageRepository.findPreview(id);
+        return ResponseEntity
+                .accepted()
+                .contentType(MediaType.parseMediaType(image.getMimeType().getName()))
+                .body(image.getPreviewImage());
+    }
+
+    public static Sort sortFromString(String s) {
+        String[] split = s.split("-");
+        String sortString = split[0];
+        Sort sortFromString = Sort.by(sortString);
+        if (split.length > 1) {
+            switch (split[1].toLowerCase(Locale.ROOT)) {
+                case "desc":
+                case "descend":
+                case "descending":
+                    sortFromString = sortFromString.descending();
+                    break;
+                case "asc":
+                case "ascend":
+                case "ascending":
+                    sortFromString = sortFromString.ascending();
+                    break;
+            }
+        }
+        return sortFromString;
     }
 }

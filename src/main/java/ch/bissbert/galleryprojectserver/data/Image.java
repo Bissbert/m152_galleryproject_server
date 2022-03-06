@@ -3,6 +3,7 @@ package ch.bissbert.galleryprojectserver.data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import javax.activation.MimeType;
 import javax.persistence.*;
 import java.util.Arrays;
 
@@ -14,19 +15,21 @@ import java.util.Arrays;
 @Builder
 public class Image {
 
-    public Image(int id, int height, int width, int bitsPerPixel, String compressionType, String name, ImageMimeType mimeType) {
+    public Image(int id, int height, int width, int bitsPerPixel, String compressionType, String name, String description, ImageMimeType mimeType) {
         this.id = id;
         this.height = height;
         this.width = width;
         this.bitsPerPixel = bitsPerPixel;
         this.compressionType = compressionType;
         this.name = name;
+        this.description = description;
         this.mimeType = mimeType;
     }
 
-    public Image(int id, byte[] previewImage) {
+    public Image(int id, byte[] previewImage, ImageMimeType mimeType) {
         this.id = id;
         this.previewImage = previewImage;
+        this.mimeType = mimeType;
     }
 
     @Id
