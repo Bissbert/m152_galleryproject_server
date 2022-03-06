@@ -71,7 +71,7 @@ public class ImageController {
      */
     @GetMapping("/images")
     @CrossOrigin(origins = "http://localhost:3000")
-    public List<Image> getImagesWithId(
+    public List<Image> getImages(
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam(required = false, name = "sort") List<String> sortBy,
@@ -81,7 +81,7 @@ public class ImageController {
                 .stream()
                 .map(ImageController::sortFromString)
                 .reduce(Sort::and)
-                .get() : Sort.by("id");
+                .orElse(Sort.by("id")) : Sort.by("id");
         Pageable pageable = PageRequest.of(page, size, sort);
         List<Image> images;
         if (idList == null) {
@@ -89,7 +89,8 @@ public class ImageController {
         } else {
             images = imageRepository.findAllByIdIn(pageable, idList).getContent();
         }
-        logger.info(images.toString());
+        logger.info("images from database: ");
+        images.stream().map(Image::toString).forEach(s -> logger.info(s));
         return images;
     }
 
