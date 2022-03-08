@@ -13,7 +13,7 @@ public class ImageMimeTypeTest {
     String name = "test";
 
     @Test
-    public void testEquals() {
+    void testEquals() {
 
         ImageMimeType mimeType = new ImageMimeType();
         mimeType.setId(1);
@@ -24,7 +24,7 @@ public class ImageMimeTypeTest {
     }
 
     @Test
-    public void hashTest(){
+    void hashTest(){
         ImageMimeType mimeType = ImageMimeType.builder().name(name).id(1).build();
         assertEquals(Objects.hash(mimeType.getId(), mimeType.getName()),mimeType.hashCode());
     }
