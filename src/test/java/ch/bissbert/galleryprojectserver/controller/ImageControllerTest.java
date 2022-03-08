@@ -4,8 +4,8 @@ import ch.bissbert.galleryprojectserver.ImageUtil;
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -38,7 +38,7 @@ public class ImageControllerTest {
 
     ImageControllerData data = new ImageControllerData();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
