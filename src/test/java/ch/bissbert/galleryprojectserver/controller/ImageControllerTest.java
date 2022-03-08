@@ -39,7 +39,7 @@ public class ImageControllerTest {
     ImageControllerData data = new ImageControllerData();
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
         imageController.setImageRepository(imageRepository);
@@ -65,7 +65,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void saveImages() throws Exception {
+    void saveImages() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "someFile.png", "test.png", Thread.currentThread().getContextClassLoader().getResourceAsStream("test.png"));
         ImageUpload imageUpload = new ImageUpload();
         imageUpload.setImage(multipartFile);
@@ -75,7 +75,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getImagesWithoutId() throws Exception {
+    void getImagesWithoutId() throws Exception {
         List<Image> images = imageController.getImages(0, 2, null, null);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("id"));
         verify(imageRepository).findAllWithoutImages(pageable);
@@ -83,7 +83,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getImagesWithSort() throws Exception {
+    void getImagesWithSort() throws Exception {
         List<Image> images = imageController.getImages(0, 2, data.SORT_STRINGS, null);
         Pageable pageable = PageRequest.of(0, 2, data.SORT);
         verify(imageRepository).findAllWithoutImages(pageable);
@@ -91,7 +91,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getImagesWithId() throws Exception {
+    void getImagesWithId() throws Exception {
         List<Image> images = imageController.getImages(0, 2, null, data.IDS);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("id"));
         verify(imageRepository).findAllByIdIn(pageable, data.IDS);
@@ -99,21 +99,21 @@ public class ImageControllerTest {
     }
 
     @Test
-    public void getImage() {
+    void getImage() {
         ResponseEntity<byte[]> responseEntity = imageController.getImage(1);
         verify(imageRepository).findById(1);
         assertEquals(data.IMAGE_ID_1.getFullImage(), responseEntity.getBody());
     }
 
     @Test
-    public void getpreviewImage() {
+    void getpreviewImage() {
         ResponseEntity<byte[]> responseEntity = imageController.getpreviewImage(1);
         verify(imageRepository).findPreview(1);
         assertEquals(data.IMAGE_ID_1.getPreviewImage(), responseEntity.getBody());
     }
 
     @Test
-    public void sortFromString() {
+    void sortFromString() {
         //desc
         assertEquals(Sort.by("id").descending(), ImageController.sortFromString("id-desc"));
         assertEquals(Sort.by("id").descending(), ImageController.sortFromString("id-descend"));
