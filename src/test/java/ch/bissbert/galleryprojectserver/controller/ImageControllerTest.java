@@ -1,46 +1,34 @@
 package ch.bissbert.galleryprojectserver.controller;
 
 import ch.bissbert.galleryprojectserver.ImageUtil;
-import ch.bissbert.galleryprojectserver.M152GalleryprojectServerApplication;
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = M152GalleryprojectServerApplication.class
-)
-@AutoConfigureMockMvc
 public class ImageControllerTest {
 
-    @Autowired
-    private ImageController imageController;
+    private final ImageController imageController = new ImageController();
 
     @Mock
     ImageRepository imageRepository;
