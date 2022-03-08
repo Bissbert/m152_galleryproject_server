@@ -40,7 +40,7 @@ public class ImageUtil {
                 .build();
     }
 
-    private static ImageMimeType getMimeType(String mimeType, ImageMimeTypeRepository imageMimeTypeRepository) {
+    protected static ImageMimeType getMimeType(String mimeType, ImageMimeTypeRepository imageMimeTypeRepository) {
         ImageMimeType imageMimeType = imageMimeTypeRepository.findImageMimeTypeByName(mimeType);
         if (imageMimeType == null) {
             imageMimeType = ImageMimeType.builder().name(mimeType).build();
@@ -58,7 +58,7 @@ public class ImageUtil {
      * @param extension  the extension of the original image
      * @return a smaller version of the original image
      */
-    private static byte[] toPreview(byte[] imageArray, int width, int height, String extension) throws IOException {
+    protected static byte[] toPreview(byte[] imageArray, int width, int height, String extension) throws IOException {
         int maxWidth = 200;
         int maxHeight = 200;
         int newWidth = width;
