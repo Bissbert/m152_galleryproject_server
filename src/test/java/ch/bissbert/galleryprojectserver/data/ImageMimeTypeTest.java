@@ -23,6 +23,8 @@ public class ImageMimeTypeTest {
         assertNotEquals("", mimeType);
         assertNotEquals(mimeType, "mimeType");
         assertNotEquals(mimeType, null);
+        ImageMimeType mimeType1 = new ImageMimeType(1,"test");
+        assertEquals(mimeType,mimeType1);
     }
 
     @Test
