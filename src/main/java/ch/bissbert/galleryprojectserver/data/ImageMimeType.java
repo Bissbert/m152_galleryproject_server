@@ -1,16 +1,15 @@
 package ch.bissbert.galleryprojectserver.data;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Entity
+@Table(name = "image_mime_type")
 @Getter
 @Setter
-@NoArgsConstructor
-@Table(name="image_mime_type")
-@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ImageMimeType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +18,12 @@ public class ImageMimeType {
 
     @Column(name = "name")
     private String name;
+
+    @Override
+    public String toString() {
+        return "ImageMimeType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
