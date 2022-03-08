@@ -24,7 +24,7 @@ public class ImageMimeTypeTest {
         assertNotEquals(mimeType, "mimeType");
         assertNotEquals(mimeType, null);
         ImageMimeType mimeType1 = new ImageMimeType(1,"noTest");
-        assertEquals(mimeType,mimeType1);
+        assertNotEquals(mimeType,mimeType1);
     }
 
     @Test
