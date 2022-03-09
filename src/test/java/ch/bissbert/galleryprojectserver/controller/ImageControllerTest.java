@@ -113,6 +113,12 @@ public class ImageControllerTest {
     }
 
     @Test
+    public void deleteImage() {
+        imageController.deleteImage(1);
+        verify(imageRepository).deleteById(1);
+    }
+
+    @Test
     void sortFromString() {
         //desc
         assertEquals(Sort.by("id").descending(), ImageController.sortFromString("id-desc"));
