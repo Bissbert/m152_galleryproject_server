@@ -19,16 +19,13 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +33,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Controller for the image resource.
@@ -122,7 +116,7 @@ public class ImageController {
         Image image = imageRepository.getById(id);
         byte[] file = getCSV(image);
             return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=" + image.getName() + ".csv")
+                    .header("Content-Disposition", "attachment; filename=" + image.getName().replaceAll("\\.*", "") + "metaData.csv")
                     .contentType(MediaType.parseMediaType("text/csv"))
                     .body(file);
     }
@@ -156,8 +150,6 @@ public class ImageController {
             } catch (ImageProcessingException e) {
                 e.printStackTrace();
             }
-            FileOutputStream fileOut;
-            File myFile = new File(image.getName() + "metaData" + ".csv");
 
             try(Workbook workbook = new XSSFWorkbook()) {
                 for (Directory directory : metaData.getDirectories()) {
