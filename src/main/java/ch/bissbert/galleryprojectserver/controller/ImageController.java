@@ -229,6 +229,11 @@ public class ImageController {
                 .body(image.getPreviewImage());
     }
 
+    /**
+     * A method that maps a string to a sort object.
+     * @param s The string to be mapped
+     * @return The sort object
+     */
     public static Sort sortFromString(String s) {
         String[] split = s.split("-");
         String sortString = split[0];
@@ -249,5 +254,13 @@ public class ImageController {
             }
         }
         return sortFromString;
+    }
+
+    protected void setImageRepository(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+    protected void setMimeTypeRepository(ImageMimeTypeRepository mimeTypeRepository) {
+        this.mimeTypeRepository = mimeTypeRepository;
     }
 }
