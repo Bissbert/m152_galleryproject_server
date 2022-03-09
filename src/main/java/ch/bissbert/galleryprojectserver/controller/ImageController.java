@@ -133,6 +133,19 @@ public class ImageController {
     }
 
     /**
+     * A spring boot service that deletes an image from the database by id.
+     * It takes the id of the image as a parameter.
+     * The image is deleted from the database.
+     *
+     * @param id The id of the image
+     */
+    @DeleteMapping("/images/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public void deleteImage(@PathVariable(name = "id", required = true) int id) {
+        imageRepository.deleteById(id);
+    }
+
+    /**
      * A method that maps a string to a sort object.
      * @param s The string to be mapped
      * @return The sort object
