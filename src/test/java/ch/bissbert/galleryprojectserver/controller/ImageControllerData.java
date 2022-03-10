@@ -4,6 +4,7 @@ import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.data.ImageMimeType;
 import org.springframework.data.domain.Sort;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ImageControllerData {
             .bitsPerPixel(10)
             .compressionType("PNG")
             .previewImage(new byte[2])
-            .fullImage(new byte[10])
+            .fullImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("fluo.jpeg").readAllBytes())
             .mimeType(ImageMimeType.builder().name("image/png").id(1).build())
             .build();
 
@@ -43,4 +44,7 @@ public class ImageControllerData {
         add(1);
         add(2);
     }};
+
+    public ImageControllerData() throws IOException {
+    }
 }

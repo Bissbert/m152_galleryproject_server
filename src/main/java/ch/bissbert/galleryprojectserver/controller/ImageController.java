@@ -1,9 +1,11 @@
 package ch.bissbert.galleryprojectserver.controller;
 
+import ch.bissbert.galleryprojectserver.ImageCSV;
 import ch.bissbert.galleryprojectserver.ImageUtil;
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
+import com.drew.imaging.ImageProcessingException;
 import org.apache.commons.imaging.ImageReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ public class ImageController {
     @Autowired
     private ImageMimeTypeRepository mimeTypeRepository;
 
-    private static Logger logger = LoggerFactory.getLogger(ImageController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
 
     /**
@@ -90,7 +92,7 @@ public class ImageController {
             images = imageRepository.findAllByIdIn(pageable, idList).getContent();
         }
         logger.info("images from database: ");
-        images.stream().map(Image::toString).forEach(s -> logger.info(s));
+        images.stream().map(Image::toString).forEach(logger::info);
         return images;
     }
 
@@ -105,8 +107,8 @@ public class ImageController {
      */
     @GetMapping("/images/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<byte[]> getImage(@PathVariable(name = "id", required = true) int id) {
-        Image image = imageRepository.findById(id).get();
+    public ResponseEntity<byte[]> getImage(@PathVariable(name = "id") int id) {
+        Image image = imageRepository.getById(id);
         return ResponseEntity
                 .accepted()
                 .contentType(MediaType.parseMediaType(image.getMimeType().getName()))
@@ -124,7 +126,7 @@ public class ImageController {
      */
     @GetMapping("/images/preview/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<byte[]> getpreviewImage(@PathVariable(name = "id", required = true) int id) {
+    public ResponseEntity<byte[]> getpreviewImage(@PathVariable(name = "id") int id) {
         Image image = imageRepository.findPreview(id);
         return ResponseEntity
                 .accepted()
@@ -141,12 +143,32 @@ public class ImageController {
      */
     @DeleteMapping("/images/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void deleteImage(@PathVariable(name = "id", required = true) int id) {
+    public void deleteImage(@PathVariable(name = "id") int id) {
         imageRepository.deleteById(id);
     }
 
     /**
+     * A spring boot service to fetch and save all metadata of an ime in the form of an excel
+     * @param id id of the image the metadata is to be fetched for
+     * @return all metadata in form of an excel
+     * @throws IOException if the excel file cannot be generated
+     * @throws ImageProcessingException if the image cannot be processed
+     */
+    @GetMapping(value = "images/metadata/{id}")
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<byte[]> getMetaData(@PathVariable(name = "id") int id) throws IOException, ImageProcessingException {
+        Image image = imageRepository.getById(id);
+        ImageCSV imageCSV = new ImageCSV(image.getFullImage());
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=" + image.getName().replaceAll("\\.*", "") + "-metaData.xlsx")
+                .contentType(MediaType.parseMediaType("text/xlsx"))
+                .body(imageCSV.getBytes());
+    }
+
+    /**
      * A method that maps a string to a sort object.
+     *
      * @param s The string to be mapped
      * @return The sort object
      */
@@ -156,17 +178,8 @@ public class ImageController {
         Sort sortFromString = Sort.by(sortString);
         if (split.length > 1) {
             switch (split[1].toLowerCase(Locale.ROOT)) {
-                case "desc":
-                case "descend":
-                case "descending":
-                    sortFromString = sortFromString.descending();
-                    break;
-                case "asc":
-                case "ascend":
-                case "ascending":
-                    sortFromString = sortFromString.ascending();
-                    break;
-                default:
+                case "desc", "descend", "descending" -> sortFromString = sortFromString.descending();
+                case "asc", "ascend", "ascending" -> sortFromString = sortFromString.ascending();
             }
         }
         return sortFromString;

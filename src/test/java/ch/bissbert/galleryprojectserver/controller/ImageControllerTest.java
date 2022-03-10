@@ -4,6 +4,7 @@ import ch.bissbert.galleryprojectserver.ImageUtil;
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
+import com.drew.imaging.ImageProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,12 +38,13 @@ public class ImageControllerTest {
     @Mock
     ImageMimeTypeRepository imageMimeTypeRepository;
 
-    ImageControllerData data = new ImageControllerData();
+    ImageControllerData data;
 
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
+        data = new ImageControllerData();
         imageController.setImageRepository(imageRepository);
         imageController.setMimeTypeRepository(imageMimeTypeRepository);
 
@@ -59,7 +62,7 @@ public class ImageControllerTest {
                         }})
                 );
 
-        when(imageRepository.findById(1)).thenReturn(Optional.of(data.IMAGE_ID_1));
+        when(imageRepository.getById(1)).thenReturn(data.IMAGE_ID_1);
 
         when(imageRepository.findPreview(1)).thenReturn(data.IMAGE_ID_1);
     }
@@ -101,7 +104,7 @@ public class ImageControllerTest {
     @Test
     void getImage() {
         ResponseEntity<byte[]> responseEntity = imageController.getImage(1);
-        verify(imageRepository).findById(1);
+        verify(imageRepository).getById(1);
         assertEquals(data.IMAGE_ID_1.getFullImage(), responseEntity.getBody());
     }
 
@@ -116,6 +119,13 @@ public class ImageControllerTest {
     public void deleteImage() {
         imageController.deleteImage(1);
         verify(imageRepository).deleteById(1);
+    }
+
+    @Test
+    void getMetaData() throws ImageProcessingException, IOException {
+        final int id = 1;
+        imageController.getMetaData(1);
+        verify(imageRepository).getById(1);
     }
 
     @Test
