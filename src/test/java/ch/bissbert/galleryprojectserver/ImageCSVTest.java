@@ -55,4 +55,9 @@ class ImageCSVTest {
     void testHashCode() {
         assertEquals(imageCSV.hashCode(), Arrays.hashCode(image));
     }
+
+    @Test
+    void testToString() {
+        assertTrue(imageCSV.toString().contains(Arrays.toString(image)));
+    }
 }
