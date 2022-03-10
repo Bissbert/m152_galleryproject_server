@@ -34,8 +34,8 @@ public record ImageCSV(byte[] image) {
                 Sheet sheet = workbook.createSheet(directory.getName());
                 int rowCount = 0;
                 for (Tag tag : directory.getTags()) {
-                    logger.info("[%s] - %s = %s",
-                            directory.getName(), tag.getTagName(), tag.getDescription());
+                    logger.info(String.format("[%s] - %s = %s",
+                            directory.getName(), tag.getTagName(), tag.getDescription()));
                     Row row = sheet.createRow(rowCount);
                     rowCount++;
                     Cell cell = row.createCell(0);
@@ -68,5 +68,12 @@ public record ImageCSV(byte[] image) {
     @Override
     public int hashCode() {
         return Arrays.hashCode(image);
+    }
+
+    @Override
+    public String toString() {
+        return "ImageCSV{" +
+                "image=" + Arrays.toString(image) +
+                '}';
     }
 }
