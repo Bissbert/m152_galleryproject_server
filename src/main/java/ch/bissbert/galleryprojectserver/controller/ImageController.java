@@ -1,9 +1,11 @@
 package ch.bissbert.galleryprojectserver.controller;
 
+import ch.bissbert.galleryprojectserver.ImageCSV;
 import ch.bissbert.galleryprojectserver.ImageUtil;
 import ch.bissbert.galleryprojectserver.data.Image;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
+import com.drew.imaging.ImageProcessingException;
 import org.apache.commons.imaging.ImageReadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,12 +143,25 @@ public class ImageController {
      */
     @DeleteMapping("/images/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public void deleteImage(@PathVariable(name = "id", required = true) int id) {
+    public void deleteImage(@PathVariable(name = "id") int id) {
         imageRepository.deleteById(id);
+    }
+
+    @GetMapping(value = "images/metadata/{id}")
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<byte[]> getMetaData(@PathVariable(name = "id") int id) throws IOException, ImageProcessingException {
+        Image image = imageRepository.findById(id).get();
+        ImageCSV imageCSV = new ImageCSV(image.getFullImage());
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=" + image.getName().replaceAll("\\.*", "") + "-metaData.xlsx")
+                .contentType(MediaType.parseMediaType("text/xlsx"))
+                .body(imageCSV.getBytes());
     }
 
     /**
      * A method that maps a string to a sort object.
+     *
      * @param s The string to be mapped
      * @return The sort object
      */

@@ -19,6 +19,7 @@ public class ImageMimeTypeTest {
         mimeType.setId(1);
         mimeType.setName(name);
         assertEquals(mimeType, ImageMimeType.builder().name(name).id(1).build());
+        assertNotEquals(mimeType, ImageMimeType.builder().name(name+"SomethingElse").id(1).build());
         assertNotEquals(null, mimeType);
         assertNotEquals("", mimeType);
         assertNotEquals(mimeType, "mimeType");
