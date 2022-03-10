@@ -59,7 +59,7 @@ public class ImageControllerTest {
                         }})
                 );
 
-        when(imageRepository.findById(1)).thenReturn(Optional.of(data.IMAGE_ID_1));
+        when(imageRepository.getById(1)).thenReturn(data.IMAGE_ID_1);
 
         when(imageRepository.findPreview(1)).thenReturn(data.IMAGE_ID_1);
     }
@@ -101,7 +101,7 @@ public class ImageControllerTest {
     @Test
     void getImage() {
         ResponseEntity<byte[]> responseEntity = imageController.getImage(1);
-        verify(imageRepository).findById(1);
+        verify(imageRepository).getById(1);
         assertEquals(data.IMAGE_ID_1.getFullImage(), responseEntity.getBody());
     }
 
