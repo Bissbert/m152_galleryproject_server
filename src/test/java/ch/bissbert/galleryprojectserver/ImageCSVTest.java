@@ -9,18 +9,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ImageCSVTest {
 
     ImageCSV imageCSV;
+    byte[] image;
 
     @BeforeEach
     void setUp() throws IOException {
-        byte[] image = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("fluo.jpeg")).readAllBytes();
+        image = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("fluo.jpeg")).readAllBytes();
         imageCSV = new ImageCSV(image);
     }
 
@@ -40,5 +41,18 @@ class ImageCSVTest {
     @Test
     void image() {
         assertNotNull(imageCSV.image());
+    }
+
+    @Test
+    void testEquals() {
+        assertEquals(imageCSV, imageCSV);
+        assertEquals(imageCSV, new ImageCSV(image));
+        assertNotEquals(imageCSV, null);
+        assertNotEquals(imageCSV, "null");
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(imageCSV.hashCode(), Arrays.hashCode(image));
     }
 }

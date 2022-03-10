@@ -180,8 +180,6 @@ public class ImageController {
             switch (split[1].toLowerCase(Locale.ROOT)) {
                 case "desc", "descend", "descending" -> sortFromString = sortFromString.descending();
                 case "asc", "ascend", "ascending" -> sortFromString = sortFromString.ascending();
-                default -> {
-                }
             }
         }
         return sortFromString;

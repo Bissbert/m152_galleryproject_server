@@ -1,14 +1,10 @@
 package ch.bissbert.galleryprojectserver;
 
-import ch.bissbert.galleryprojectserver.data.Image;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -20,12 +16,11 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
 public record ImageCSV(byte[] image) {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageCSV.class);
-
 
     public byte[] getBytes() throws IOException, ImageProcessingException {
 
@@ -39,7 +34,7 @@ public record ImageCSV(byte[] image) {
                 Sheet sheet = workbook.createSheet(directory.getName());
                 int rowCount = 0;
                 for (Tag tag : directory.getTags()) {
-                    System.out.format("[%s] - %s = %s",
+                    logger.info("[%s] - %s = %s",
                             directory.getName(), tag.getTagName(), tag.getDescription());
                     Row row = sheet.createRow(rowCount);
                     rowCount++;
@@ -55,9 +50,23 @@ public record ImageCSV(byte[] image) {
 
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 workbook.write(outputStream);
-                workbook.close();
                 return outputStream.toByteArray();
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ImageCSV imageCSV = (ImageCSV) o;
+
+        return Arrays.equals(image, imageCSV.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(image);
     }
 }
