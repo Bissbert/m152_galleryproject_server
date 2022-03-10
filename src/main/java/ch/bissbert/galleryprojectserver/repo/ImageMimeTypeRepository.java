@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ImageMimeTypeRepository extends JpaRepository<ImageMimeType, Integer> {
+    ImageMimeType findImageMimeTypeByName(String name);
 }
