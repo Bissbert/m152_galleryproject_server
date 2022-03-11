@@ -9,6 +9,9 @@ This project is the BE for the [gallery project in the module 152](https://githu
 
 It is used to save and fetch images and the belonging data from and to a database.
 
+There are implementations all CRUD operations for the image as well as a all metadata endpoint.
+The list of images doesn't contain the images themself, these have to be fetched seperatatelly to optimize the loading speeds
+
 ## Example Usage Of Endpoints
 
 ```
