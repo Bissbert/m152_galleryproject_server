@@ -53,7 +53,7 @@ public class ImageController {
         imageRepository.save(
                 ImageUtil.createImage(
                         image.getImage().getBytes(),
-                        image.getImage().getOriginalFilename(),
+                        image.getTitle(),
                         image.getDescription(),
                         mimeTypeRepository
                 )

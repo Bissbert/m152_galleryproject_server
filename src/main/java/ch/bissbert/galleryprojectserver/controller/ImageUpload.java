@@ -9,4 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageUpload {
     private MultipartFile image;
     private String description;
+    private String title;
 }
