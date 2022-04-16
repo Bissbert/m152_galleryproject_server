@@ -48,7 +48,7 @@ public class ImageController {
      * @param image The list of byte arrays
      */
     @PostMapping("/images")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public void saveImages(@ModelAttribute ImageUpload image) throws IOException, ImageReadException {
         imageRepository.save(
                 ImageUtil.createImage(
@@ -72,7 +72,7 @@ public class ImageController {
      * @return list of image data
      */
     @GetMapping("/images")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public List<Image> getImages(
             @RequestParam int page,
             @RequestParam int size,
@@ -106,7 +106,7 @@ public class ImageController {
      * @return The image as a byte array
      */
     @GetMapping("/images/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public ResponseEntity<byte[]> getImage(@PathVariable(name = "id") int id) {
         Image image = imageRepository.getById(id);
         return ResponseEntity
@@ -125,7 +125,7 @@ public class ImageController {
      * @return The preview image as a byte array
      */
     @GetMapping("/images/preview/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public ResponseEntity<byte[]> getpreviewImage(@PathVariable(name = "id") int id) {
         Image image = imageRepository.findPreview(id);
         return ResponseEntity
@@ -142,7 +142,7 @@ public class ImageController {
      * @param id The id of the image
      */
     @DeleteMapping("/images/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public void deleteImage(@PathVariable(name = "id") int id) {
         imageRepository.deleteById(id);
     }
@@ -156,7 +156,7 @@ public class ImageController {
      */
     @GetMapping(value = "images/metadata/{id}")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:3000", originPatterns = "http://192.168.0.*:3000")
     public ResponseEntity<byte[]> getMetaData(@PathVariable(name = "id") int id) throws IOException, ImageProcessingException {
         Image image = imageRepository.getById(id);
         ImageCSV imageCSV = new ImageCSV(image.getFullImage());
