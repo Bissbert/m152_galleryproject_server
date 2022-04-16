@@ -18,9 +18,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Class for the extraction from the Metadata from the Image. Extrated as an Excel file.
+ *
+ * @author Bissbert, LuckAndPluck
+ * @version 1.0
+ * @since 1.0
+ */
+
 public record ImageCSV(byte[] image) {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageCSV.class);
+
+    /**
+     * @return the Excel file containing the metadata as a byte array
+     * @throws IOException              when the byte array provided is not valid image type
+     * @throws ImageProcessingException when the image is processes by the reader and doesn't have the needed data
+     */
 
     public byte[] getBytes() throws IOException, ImageProcessingException {
 

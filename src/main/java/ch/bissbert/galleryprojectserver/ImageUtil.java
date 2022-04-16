@@ -15,6 +15,14 @@ import java.io.IOException;
 
 import static java.awt.Image.SCALE_SMOOTH;
 
+/**
+ * Class for modifying the Image.
+ *
+ * @author Bissbert, LuckAndPluck
+ * @version 1.0
+ * @since 1.0
+ */
+
 public class ImageUtil {
 
     private ImageUtil(){}
