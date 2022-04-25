@@ -18,24 +18,35 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Class for the extraction from the Metadata from the Image. Extrated as an Excel file.
+ *
+ * @author Bissbert, LuckAndPluck
+ * @version 1.0
+ * @since 1.0
+ */
+
 public record ImageCSV(byte[] image) {
 
     private static final Logger logger = LoggerFactory.getLogger(ImageCSV.class);
 
+    /**
+     * @return the Excel file containing the metadata as a byte array
+     * @throws IOException              when the byte array provided is not valid image type
+     * @throws ImageProcessingException when the image is processes by the reader and doesn't have the needed data
+     */
+
     public byte[] getBytes() throws IOException, ImageProcessingException {
 
-        Metadata metaData = null;
         ByteArrayInputStream stream = new ByteArrayInputStream(image);
-
-        metaData = ImageMetadataReader.readMetadata(stream);
+        Metadata metaData = ImageMetadataReader.readMetadata(stream);
 
         try (Workbook workbook = new XSSFWorkbook()) {
             for (Directory directory : metaData.getDirectories()) {
                 Sheet sheet = workbook.createSheet(directory.getName());
                 int rowCount = 0;
                 for (Tag tag : directory.getTags()) {
-                    logger.info(String.format("[%s] - %s = %s",
-                            directory.getName(), tag.getTagName(), tag.getDescription()));
+                    logger.info(String.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription()));
                     Row row = sheet.createRow(rowCount);
                     rowCount++;
                     Cell cell = row.createCell(0);
@@ -72,8 +83,6 @@ public record ImageCSV(byte[] image) {
 
     @Override
     public String toString() {
-        return "ImageCSV{" +
-                "image=" + Arrays.toString(image) +
-                '}';
+        return "ImageCSV{" + "image=" + Arrays.toString(image) + '}';
     }
 }

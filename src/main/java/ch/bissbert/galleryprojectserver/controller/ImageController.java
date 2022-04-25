@@ -25,7 +25,7 @@ import java.util.Locale;
  * Controller for the image resource.
  * Has an autowire to the image repository.
  *
- * @author Bissbert
+ * @author Bissbert, LuckAndPluck
  * @version 1.0
  * @since 1.0
  */
@@ -53,7 +53,7 @@ public class ImageController {
         imageRepository.save(
                 ImageUtil.createImage(
                         image.getImage().getBytes(),
-                        image.getImage().getOriginalFilename(),
+                        image.getTitle(),
                         image.getDescription(),
                         mimeTypeRepository
                 )
@@ -161,7 +161,8 @@ public class ImageController {
         Image image = imageRepository.getById(id);
         ImageCSV imageCSV = new ImageCSV(image.getFullImage());
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=" + image.getName().replaceAll("\\.*", "") + "-metaData.xlsx")
+                .header("Content-Disposition",
+                        "attachment; filename=" + image.getName().replaceAll("\\.*", "") + "-metaData.xlsx")
                 .contentType(MediaType.parseMediaType("text/xlsx"))
                 .body(imageCSV.getBytes());
     }

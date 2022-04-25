@@ -21,7 +21,8 @@ class ImageCSVTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        image = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream("fluo.jpeg")).readAllBytes();
+        image = Objects.requireNonNull(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("fluo.jpeg")).readAllBytes();
         imageCSV = new ImageCSV(image);
     }
 
@@ -48,7 +49,6 @@ class ImageCSVTest {
         assertEquals(imageCSV, imageCSV);
         assertEquals(imageCSV, new ImageCSV(image));
         assertNotEquals(imageCSV, null);
-        assertNotEquals(imageCSV, "null");
     }
 
     @Test

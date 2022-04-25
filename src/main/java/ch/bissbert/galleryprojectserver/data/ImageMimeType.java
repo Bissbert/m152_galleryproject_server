@@ -1,8 +1,17 @@
 package ch.bissbert.galleryprojectserver.data;
 
 import lombok.*;
+
 import javax.persistence.*;
 import java.util.Objects;
+
+/**
+ * Model class for the ImageMimeType.
+ *
+ * @author Bissbert, LuckAndPluck
+ * @version 1.0
+ * @since 1.0
+ */
 
 @Entity
 @Table(name = "image_mime_type")
@@ -11,6 +20,9 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+
+
 public class ImageMimeType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +47,6 @@ public class ImageMimeType {
 
     @Override
     public String toString() {
-        return "ImageMimeType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "ImageMimeType{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }

@@ -69,16 +69,28 @@ public class ImageControllerTest {
 
     @Test
     void saveImages() throws Exception {
-        MockMultipartFile multipartFile = new MockMultipartFile("file", "someFile.png", "test.png", Thread.currentThread().getContextClassLoader().getResourceAsStream("test.png"));
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "file",
+                "someFile.png",
+                "test.png",
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("test.png")
+        );
         ImageUpload imageUpload = new ImageUpload();
         imageUpload.setImage(multipartFile);
         imageUpload.setDescription("WHY");
         imageController.saveImages(imageUpload);
-        verify(imageRepository).save(ImageUtil.createImage(multipartFile.getBytes(), multipartFile.getName(), imageUpload.getDescription(), imageMimeTypeRepository));
+        verify(imageRepository).save(
+                ImageUtil.createImage(
+                        multipartFile.getBytes(),
+                        multipartFile.getName(),
+                        imageUpload.getDescription(),
+                        imageMimeTypeRepository
+                )
+        );
     }
 
     @Test
-    void getImagesWithoutId() throws Exception {
+    void getImagesWithoutId() {
         List<Image> images = imageController.getImages(0, 2, null, null);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("id"));
         verify(imageRepository).findAllWithoutImages(pageable);
@@ -86,7 +98,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    void getImagesWithSort() throws Exception {
+    void getImagesWithSort() {
         List<Image> images = imageController.getImages(0, 2, data.SORT_STRINGS, null);
         Pageable pageable = PageRequest.of(0, 2, data.SORT);
         verify(imageRepository).findAllWithoutImages(pageable);
@@ -94,7 +106,7 @@ public class ImageControllerTest {
     }
 
     @Test
-    void getImagesWithId() throws Exception {
+    void getImagesWithId() {
         List<Image> images = imageController.getImages(0, 2, null, data.IDS);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("id"));
         verify(imageRepository).findAllByIdIn(pageable, data.IDS);

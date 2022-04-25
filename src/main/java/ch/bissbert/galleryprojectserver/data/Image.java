@@ -7,6 +7,14 @@ import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Model class for the Image.
+ *
+ * @author Bissbert, LuckAndPluck
+ * @version 1.0
+ * @since 1.0
+ */
+
 @Entity
 @Getter
 @Setter
@@ -82,17 +90,6 @@ public class Image {
 
     @Override
     public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", fullImage=" + Arrays.toString(fullImage) +
-                ", previewImage=" + Arrays.toString(previewImage) +
-                ", height=" + height +
-                ", width=" + width +
-                ", bitsPerPixel=" + bitsPerPixel +
-                ", compressionType='" + compressionType + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", mimeType=" + mimeType +
-                '}';
+        return "Image{" + "id=" + id + ", fullImage=" + Arrays.toString(fullImage) + ", previewImage=" + Arrays.toString(previewImage) + ", height=" + height + ", width=" + width + ", bitsPerPixel=" + bitsPerPixel + ", compressionType='" + compressionType + '\'' + ", name='" + name + '\'' + ", description='" + description + '\'' + ", mimeType=" + mimeType + '}';
     }
 }

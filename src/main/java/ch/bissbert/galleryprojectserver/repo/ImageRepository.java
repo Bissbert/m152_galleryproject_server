@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {
     @Query("select new Image(i.id, i.height, i.width, i.bitsPerPixel, i.compressionType, i.name,i.description, i.mimeType) from Image i")
-    public Page<Image> findAllWithoutImages(Pageable pageable);
+    Page<Image> findAllWithoutImages(Pageable pageable);
 
     @Query("select new Image(i.id, i.height, i.width, i.bitsPerPixel, i.compressionType, i.name,i.description, i.mimeType) from Image i where i.id in :ids")
-    public Page<Image> findAllByIdIn(Pageable pageable, List<Integer> ids);
+    Page<Image> findAllByIdIn(Pageable pageable, List<Integer> ids);
 
     @Query("select new Image(i.id, i.previewImage, i.mimeType) from Image i where i.id = :id")
-    public Image findPreview(@Param("id") int id);
+    Image findPreview(@Param("id") int id);
 }
