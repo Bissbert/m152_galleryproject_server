@@ -12,7 +12,6 @@ import java.util.Objects;
  * @version 1.0
  * @since 1.0
  */
-
 @Entity
 @Table(name = "image_mime_type")
 @Getter
@@ -20,9 +19,6 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-
-
 public class ImageMimeType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

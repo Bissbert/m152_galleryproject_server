@@ -2,6 +2,7 @@ package ch.bissbert.galleryprojectserver.controller;
 
 import ch.bissbert.galleryprojectserver.ImageUtil;
 import ch.bissbert.galleryprojectserver.data.Image;
+import ch.bissbert.galleryprojectserver.data.ImageUpload;
 import ch.bissbert.galleryprojectserver.repo.ImageMimeTypeRepository;
 import ch.bissbert.galleryprojectserver.repo.ImageRepository;
 import com.drew.imaging.ImageProcessingException;
@@ -19,7 +20,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

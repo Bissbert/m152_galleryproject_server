@@ -24,9 +24,23 @@ import static java.awt.Image.SCALE_SMOOTH;
  */
 
 public class ImageUtil {
+    private static final int MAX_PREVIEW_SIZE = 500;
 
-    private ImageUtil(){}
+    private ImageUtil() {
+    }
 
+    /**
+     * creates an image instance from the given image array, name and description.
+     * The missing information if generated from the image array.
+     *
+     * @param imageArray         the image array
+     * @param name               the name of the image
+     * @param description        the description of the image
+     * @param mimeTypeRepository the repository for the mime types
+     * @return the image instance
+     * @throws IOException        if the image array could not be read
+     * @throws ImageReadException if the image array could not be read
+     */
     public static Image createImage(
             byte[] imageArray,
             String name,
@@ -48,6 +62,14 @@ public class ImageUtil {
                 .build();
     }
 
+    /**
+     * gets the mimetype for the given mime type.
+     * If the mime type does not exist, it is created.
+     *
+     * @param mimeType                the mime type as string
+     * @param imageMimeTypeRepository the repository for the mime types
+     * @return the mime type instance
+     */
     protected static ImageMimeType getMimeType(String mimeType, ImageMimeTypeRepository imageMimeTypeRepository) {
         ImageMimeType imageMimeType = imageMimeTypeRepository.findImageMimeTypeByName(mimeType);
         if (imageMimeType == null) {
@@ -67,17 +89,15 @@ public class ImageUtil {
      * @return a smaller version of the original image
      */
     protected static byte[] toPreview(byte[] imageArray, int width, int height, String extension) throws IOException {
-        int maxWidth = 200;
-        int maxHeight = 200;
         int newWidth = width;
         int newHeight = height;
-        if (width > maxWidth || height > maxHeight) {
+        if (width > MAX_PREVIEW_SIZE || height > MAX_PREVIEW_SIZE) {
             if (width > height) {
-                newWidth = maxWidth;
-                newHeight = (int) (height * ((double) maxWidth / width));
+                newWidth = MAX_PREVIEW_SIZE;
+                newHeight = (int) (height * ((double) MAX_PREVIEW_SIZE / width));
             } else {
-                newHeight = maxHeight;
-                newWidth = (int) (width * ((double) maxHeight / height));
+                newHeight = MAX_PREVIEW_SIZE;
+                newWidth = (int) (width * ((double) MAX_PREVIEW_SIZE / height));
             }
         }
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageArray));
