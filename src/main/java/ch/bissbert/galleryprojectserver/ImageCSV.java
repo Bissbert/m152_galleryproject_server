@@ -28,7 +28,7 @@ import java.util.Arrays;
 
 public record ImageCSV(byte[] image) {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImageCSV.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageCSV.class);
 
     /**
      * @return the Excel file containing the metadata as a byte array
@@ -49,7 +49,7 @@ public record ImageCSV(byte[] image) {
 
                 for (Tag tag : directory.getTags()) {
 
-                    logger.info(String.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription()));
+                    LOGGER.info(String.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription()));
 
                     Row row = sheet.createRow(rowCount);
                     rowCount++;
