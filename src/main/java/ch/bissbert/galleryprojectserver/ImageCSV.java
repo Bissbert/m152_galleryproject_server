@@ -43,18 +43,25 @@ public record ImageCSV(byte[] image) {
 
         try (Workbook workbook = new XSSFWorkbook()) {
             for (Directory directory : metaData.getDirectories()) {
+
                 Sheet sheet = workbook.createSheet(directory.getName());
                 int rowCount = 0;
+
                 for (Tag tag : directory.getTags()) {
+
                     logger.info(String.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription()));
+
                     Row row = sheet.createRow(rowCount);
                     rowCount++;
-                    Cell cell = row.createCell(0);
-                    cell.setCellValue(tag.getTagName());
+
+                    Cell tagNameCell = row.createCell(0);
+                    tagNameCell.setCellValue(tag.getTagName());
                     sheet.autoSizeColumn(0);
-                    Cell cell2 = row.createCell(1);
-                    cell2.setCellValue(tag.getDescription());
+
+                    Cell tagValueCell = row.createCell(1);
+                    tagValueCell.setCellValue(tag.getDescription());
                     sheet.autoSizeColumn(1);
+
                 }
             }
 
